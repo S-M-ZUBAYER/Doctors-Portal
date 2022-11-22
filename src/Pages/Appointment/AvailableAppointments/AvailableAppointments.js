@@ -12,7 +12,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     const { data: appointmentOptions = [], refetch, isLoading } = useQuery({
         queryKey: ['appointmentsOptions', date],
         queryFn: () => {
-            return fetch(`http://localhost:5000/appointmentsOptions?date=${date}`)
+            return fetch(`https://y-mocha-delta.vercel.app/appointmentsOptions?date=${date}`)
                 .then(res => res.json())
         }
     })
@@ -21,7 +21,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     }
 
     // useEffect(() => {
-    //     fetch('http://localhost:5000/appointmentsOptions')
+    //     fetch('https://y-mocha-delta.vercel.app/appointmentsOptions')
     //         .then(res => res.json())
     //         .then(data => setAppointmentOptions(data))
     // }, [])

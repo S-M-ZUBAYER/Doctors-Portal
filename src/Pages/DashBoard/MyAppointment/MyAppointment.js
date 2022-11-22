@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthProvider';
 
 const MyAppointment = () => {
     const { user } = useContext(AuthContext);
 
-    const url = `http://localhost:5000/bookings?email=${user?.email}`;
+    const url = `https://y-mocha-delta.vercel.app/bookings?email=${user?.email}`;
 
     const { data: bookings = [] } = useQuery({
         queryKey: ['bookings', user?.email],
@@ -31,17 +32,31 @@ const MyAppointment = () => {
                             <th>Treatment</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Payment</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            bookings.map((booking, index) =>
+                        {bookings.length &&
+                            bookings?.map((booking, index) =>
                                 <tr key={booking._id}>
                                     <th>{index + 1}</th>
                                     <td>{booking.patient}</td>
                                     <td>{booking.treatment}</td>
                                     <td>{booking.appointmentDate}</td>
                                     <td>{booking.slot}</td>
+                                    <td>
+                                        {
+                                            booking.price && !booking.paid &&
+                                            <Link to={`/dashboard/payment/${booking._id}`}>
+                                                <button className="btn btn-sm btn-primary">Pay</button>
+                                            </Link>
+                                        }
+                                        {
+                                            booking.price && booking.paid &&
+                                            <button className=" text-success font-bold">Paid</button>
+                                        }
+                                    </td>
                                 </tr>
                             )
                         }

@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import toast from 'react-hot-toast';
+import Loading from '../../Shared/Loading/Loading';
 
 const AllUsers = () => {
-    const { data: users = [], refetch } = useQuery({
+    const { data: users = [], isLoading, refetch } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/users', {
+            const res = await fetch('https://y-mocha-delta.vercel.app/users', {
                 headers: {
                     authorization: `bearer ${localStorage.getItem("ACCESS_TOKEN")}`
                 }
@@ -16,7 +17,7 @@ const AllUsers = () => {
         }
     })
     const handleMakeAdmin = id => {
-        fetch(`http://localhost:5000/users/admin/${id}`, {
+        fetch(`https://y-mocha-delta.vercel.app/users/admin/${id}`, {
             method: 'PUT',
             headers: {
                 authorization: `bearer ${localStorage.getItem('ACCESS_TOKEN')}`
@@ -31,7 +32,9 @@ const AllUsers = () => {
             })
 
     }
-
+    if (isLoading) {
+        return <Loading></Loading>
+    }
     return (
         <div>
             <table className="table w-full">
@@ -46,7 +49,7 @@ const AllUsers = () => {
                 </thead>
                 <tbody>
                     {
-                        users.map((user, index) =>
+                        users?.map((user, index) =>
                             <tr key={user._id}>
                                 <th>{index + 1}</th>
                                 <td>{user.name}</td>
